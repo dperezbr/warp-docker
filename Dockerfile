@@ -23,9 +23,11 @@ RUN case ${TARGETPLATFORM} in \
     echo "Building for ${ARCH} with GOST ${GOST_VERSION}" &&\
     apt-get update && \
     apt-get upgrade -y && \
-    apt-get install -y curl gnupg lsb-release sudo jq ipcalc && \
+    apt-get install -y curl gnupg lsb-release sudo jq ipcalc apt-utils debconf-utils dialog && \
     curl https://pkg.cloudflareclient.com/pubkey.gpg | gpg --yes --dearmor --output /usr/share/keyrings/cloudflare-warp-archive-keyring.gpg && \
     echo "deb [signed-by=/usr/share/keyrings/cloudflare-warp-archive-keyring.gpg] https://pkg.cloudflareclient.com/ $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/cloudflare-client.list && \
+    echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections && \
+    echo "resolvconf resolvconf/linkify-resolvconf boolean false" | debconf-set-selections && \
     apt-get update && \
     apt-get install -y cloudflare-warp && \
     apt-get install -y resolvconf && \
@@ -45,8 +47,6 @@ USER warp
 # Accept Cloudflare WARP TOS
 RUN mkdir -p /home/warp/.local/share/warp && \
     echo -n 'yes' > /home/warp/.local/share/warp/accepted-tos.txt
-
-RUN echo "sudo resolvconf resolvconf/linkify-resolvconf boolean false" | debconf-set-selections
 
 ENV GOST_ARGS="-L :1080"
 ENV WARP_SLEEP=2

@@ -46,7 +46,7 @@ USER warp
 RUN mkdir -p /home/warp/.local/share/warp && \
     echo -n 'yes' > /home/warp/.local/share/warp/accepted-tos.txt
 
-RUN echo "resolvconf resolvconf/linkify-resolvconf boolean false" | debconf-set-selections
+RUN echo "sudo resolvconf resolvconf/linkify-resolvconf boolean false" | debconf-set-selections
 
 ENV GOST_ARGS="-L :1080"
 ENV WARP_SLEEP=2

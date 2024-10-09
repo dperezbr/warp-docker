@@ -5,6 +5,7 @@ services:
     image: caomingjun/warp
     container_name: warp
     restart: always
+    network_mode: bridge
     ports:
       - "1080:1080"
     environment:
@@ -20,4 +21,4 @@ services:
       - net.ipv6.conf.all.disable_ipv6=0
       - net.ipv4.conf.all.src_valid_mark=1
     volumes:
-      - ./data:/var/lib/cloudflare-warp
+      - /volume1/docker/warp:/var/lib/cloudflare-warp
